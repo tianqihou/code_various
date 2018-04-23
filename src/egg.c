@@ -2,14 +2,17 @@
 #include "defines.h"
 u16 ball_to_item(enum ball_index ball);
 
-enum gender{
-	MALE,
-	FEMALE = 0xfe,
-	NO_GENDER = 0xff
+enum gender {
+	MALE, FEMALE = 0xfe, NO_GENDER = 0xff
 };
 
 u16 get_lowest_evo_stage0(u16 species, u16 item)
 {
+	//如果是特殊彩粉蝶，则改成粉蝶虫
+	if (species >= 0x3f1 && species <= 0x403) {
+		species = 0x2cd;
+		goto END;
+	}
 	for (u16 lower_poke = 1; lower_poke < POKES_NO; lower_poke++) {
 		const struct evolution_sub* evos = (*evo_table)[lower_poke];
 		for (u8 j = 0; j < 5; j++) {
@@ -55,7 +58,6 @@ void change_ball(struct pokemon* poke, struct pokemon* target)
 	item = ball_to_item(item);
 	set_attributes(target, ATTR_POKEBALL, &item);
 }
-
 
 struct pokemon* get_mother(void* poke_parent)
 {
