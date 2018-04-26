@@ -15,7 +15,7 @@ bool time_check(u8 from, u8 to)
 {
     update_rtc();
     u8 hour = rtc_hex.hour;
-    if (to > from)
+    if (to >= from)
     {
         if (hour >= from && hour <= to)
             return 1;
@@ -59,17 +59,44 @@ bool attack_def_evo_check(struct pokemon* poke, u8 condition)
 #if EEVEE_TABLE == true
     #define eevee_evos 8
     struct evolution_sub eevee_table[eevee_evos] =  {
-	{7, ITEM_WATERSTONE, POKE_VAPOREON, 0x00, 0x00},
-	{7, ITEM_THUNDERSTONE, POKE_JOLTEON, 0x00, 0x00},
-	{7, ITEM_FIRESTONE, POKE_FLAREON, 0x00, 0x00},
-	{2, 0, POKE_ESPEON, 0x00, 0x00},
-	{3, 0, POKE_UMBREON, 0x00, 0x00},
-	{7, 0x65, 0x20c, 0, 0x00}, // Map ID defs still need to be made ??????
-	{7, ITEM_LEAFSTONE, 0x20b, 0, 0x00},//???????
-	{29, TYPE_FAIRY, 0x2F1, 0x00, 0x00}, // XX is the index of Sylveon method  ????????
+	{7, 0, ITEM_WATERSTONE, POKE_VAPOREON, 0x00},
+	{7, 0, ITEM_THUNDERSTONE, POKE_JOLTEON, 0x00},
+	{7, 0, ITEM_FIRESTONE, POKE_FLAREON, 0x00},
+	{2, 0, 0, POKE_ESPEON, 0x00},
+	{3, 0, 0, POKE_UMBREON, 0x00},
+	{33, 0x18, 0x01, 0x20c, 0x53}, //Glaceon, Shoal Cave, Ice Room
+	{17, 0, 0x3b, 0x20b, 0x00}, //Leafeon, Petalburg Woods
+	{29, 0, TYPE_FAIRY, 0x2F1, 0x00}, // XX is the index of Sylveon method
     };
 #endif // EEVEE_TABLE
 
+#if SPEWPA_TABLE == true
+    #define spewpa_evos 20
+    struct evolution_sub spewpa_table[spewpa_evos] =  {
+	{32, STEADY_SNOW, 0x0c, 0x3f1, 0x00}, //Polar
+	{32, SNOWFLAKES, 0x0c, 0x3f2, 0x00}, //Tundra
+	{31, 0xcd, 0x0c, 0x3f3, 0x00}, //Continental
+	{35, 0x20, 0x0c, 0x3f4, 0x00}, //Garden
+	{32, STEADY_MIST, 0x0c, 0x3f5, 0x00}, //Elegant
+	{33, 0x18, 0x0c, 0x3f6, 0x53}, //Icy Snow
+	{31, 0xBB, 0x0c, 0x3f7, 0x00}, //Modern
+	{31, 0xcc, 0x0c, 0x3f8, 0x00}, //Marine
+	{31, 0x4e, 0x0c, 0x3f9, 0x00}, //Archipelago
+	{31, 0x4d, 0x0c, 0x3fa, 0x00}, //HighPlains
+	{32, SANDSTORM, 0x0c, 0x3fb, 0x00}, //Sandstorm
+	{35, 0x22, 0x0c, 0x3fc, 0x00}, //River
+	{24, 0, 0x0c, 0x3fd, 0x00}, //Monsoon
+	{31, 0xc9, 0x0c, 0x3fe, 0x00}, //Savanna
+	{31, 0x50, 0x0c, 0x3ff, 0x00}, //Sun
+	{34, 0x06, 0x0c, 0x400, 0x00}, //Ocean
+	{31, 0x3b, 0x0c, 0x401, 0x00}, //Jungle
+	{31, 0xd3, 0x0c, 0x402, 0x00}, //Poke Ball
+	{31, 0x47, 0x0c, 0x403, 0x00}, //Fancy
+	{4, 0, 0x0c, 0x2cf, 0x00}, //Meadow
+    };
+#endif // SPEWPA_TABLE
+
+u16 cur_map_get_blockid_at(s16 x_to, s16 y_from);
 u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
 {
     u16 held_item = get_attributes(poke, ATTR_HELD_ITEM, 0);
@@ -86,6 +113,12 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
     {
         evos = eevee_table;
         evos_num = eevee_evos;
+    }
+	//check spewpa
+    if (SPEWPA_TABLE == true && species == 0x2ce)//POKE_SPEWPA==0x2ce
+    {
+        evos = spewpa_table;
+        evos_num = spewpa_evos;
     }
     for (u8 i = 0; i < evos_num; i++)
     {
@@ -109,7 +142,7 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
         LEVELUP_EVO:
         case 4: //level up
         case 13: //extra pokemon creation(Nincada to Ninjask)
-            if (evo->paramter <= lvl)
+            if (evo->paramter <= lvl && !(evo->pad0 == 0xff && curr_mapheader.name == 0x06))
                 evolving = 1;
             break;
         case 6: //trade with an item
@@ -122,7 +155,7 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
             break;
         STONE_EVO:
         case 7: //item
-            if ((index == STONE_CAN_EVO || index == STONE_ACTUAL_EVO) && stoneID == evo->paramter)
+            if ((index == STONE_CAN_EVO || index == STONE_ACTUAL_EVO) && stoneID == evo->paramter && !(evo->pad0 == 0xff && curr_mapheader.name == 0x06))
                 evolving = 1;
             break;
         case 8: //attack greater than defense
@@ -161,12 +194,12 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
                 }
             }
             break;
-        case 17: //level up only in certain arena, parameter is map name
+        case 17: //level up only in certain area, parameter is map name
            if (curr_mapheader.name == evo->paramter)
                 evolving = 1;
             break;
         case 18: //by level at day time
-            if (time_check(DAY_FIRST_HOUR, DAY_LAST_HOUR))
+            if (time_check(DAY_FIRST_HOUR, DAY_LAST_HOUR) && !(species == POKE_ROCKRUFF && time_check(17,17)))
                 goto LEVELUP_EVO;
             break;
         case 19: //by level at night time
@@ -244,10 +277,34 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
                 }
             }
             break;
-		case 30://level up at dusk
-			if (time_check(17, 18))
+		case 30://level up at dusk »Æ»èÎª17:00-17:59
+			if (time_check(17, 17))
                 goto LEVELUP_EVO;
             break;
+		case 31://certain area
+			if (curr_mapheader.name == evo->pad0)
+                goto LEVELUP_EVO;
+            break;
+		case 32://certain weather
+            if (sav1->ov_weather == evo->pad0)
+                goto LEVELUP_EVO;
+            break;
+		case 33://certain map_bank & map_no
+			if (sav1->map_bank == evo->pad0 && sav1->map_no == evo->pad1)
+				goto LEVELUP_EVO;
+			break;
+		case 34://certain area, dawn or dusk
+			if (curr_mapheader.name == evo->pad0 && (time_check(17,17) || time_check(5,5)))
+				goto LEVELUP_EVO;
+			break;
+		case 35://certain area, certain tile
+			if (curr_mapheader.name == evo->pad0){
+				u16 curr_block = cur_map_get_blockid_at(sav1->x_coords + 7, sav1->y_coords + 7);
+				if (curr_block == 0x170 || curr_block == 0x208 || curr_block == 0x210){
+					goto LEVELUP_EVO;
+				}
+			}
+			break;
         }
         if (evolving)
         {

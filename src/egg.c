@@ -8,7 +8,12 @@ enum gender {
 
 u16 get_lowest_evo_stage0(u16 species, u16 item)
 {
-	//如果是特殊彩粉蝶，则改成粉蝶虫
+	//New Eevolution to Eevee
+	if (species == 0x20b || species == 0x20c || species == 0x2F1) {
+		species = 0x85;
+		goto END;
+	}
+	//Special Vivillon to Scatterbug
 	if (species >= 0x3f1 && species <= 0x403) {
 		species = 0x2cd;
 		goto END;
@@ -19,6 +24,12 @@ u16 get_lowest_evo_stage0(u16 species, u16 item)
 			const struct evolution_sub* evo = &evos[j];
 			if (evo->poke == species && evo->method < 0xFA) {
 				if (evo->pad0 == 0x3f && evo->pad1 != item) {
+					//Nidoran M/F
+					if (species == 0x1d || species == 0x20)
+						species = (__umodsi3(rng(),2))? 0x1d: 0x20;
+					//Volbeat/Illumise
+					if (species == 0x182 || species == 0x183)
+						species = (__umodsi3(rng(),2))? 0x182: 0x183;
 					goto END;
 				}
 				species = lower_poke;

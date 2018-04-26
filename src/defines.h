@@ -66,6 +66,7 @@ enum trainer_class{
 #define POKES_NO        1200
 #define EVO_PER_POKE		5
 #define EEVEE_TABLE		true
+#define SPEWPA_TABLE	true //
 #define ALL_ITEMS       800
 #define MAX_LEVEL		100
 #define MORELEVELS      false
@@ -157,10 +158,10 @@ enum ball_stars{
 };
 
 
-#define DAY_FIRST_HOUR      8
-#define DAY_LAST_HOUR       16
-#define NIGHT_FIRST_HOUR    19
-#define NIGHT_LAST_HOUR     7
+#define DAY_FIRST_HOUR      6
+#define DAY_LAST_HOUR       17
+#define NIGHT_FIRST_HOUR    18
+#define NIGHT_LAST_HOUR     5
 
 
 #include "types.h"
