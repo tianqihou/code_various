@@ -9,8 +9,7 @@ u8 get_ivs(struct pokemon* poke, u8 attr){
 
 void calculate_stats_pokemon(struct pokemon* poke){
 	u16 species = get_attributes(poke, ATTR_SPECIES, 0);
-	const u8* base =  &basestat_table[species]->base_hp;
-	//u8 base[6]={78,81,71,126,74,69}; //Testing Talonflame
+	const u8* base =  &(*basestat_table)[species].base_hp;
 	u8 level = poke_lvl_from_exp(poke);
 	set_attributes(poke, ATTR_LEVEL, &level);
 	
