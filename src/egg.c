@@ -18,6 +18,11 @@ u16 get_lowest_evo_stage0(u16 species, u16 item)
 		species = 0x2cd;
 		goto END;
 	}
+	//Manaphy to Phione
+	if (species == 0x21f){
+		species = 0x21e;
+		goto END;
+	}
 	for (u16 lower_poke = 1; lower_poke < POKES_NO; lower_poke++) {
 		const struct evolution_sub* evos = (*evo_table)[lower_poke];
 		for (u8 j = 0; j < 5; j++) {
@@ -54,7 +59,7 @@ u32 get_shiny_pid(u32 PiD, u32 TiD, u8 wanted_nature, u8 wanted_gender, s32 pid_
 	do {
 		do {
 			PiD = rng() | (rng() << 0x10);
-		} while ((wanted_gender && wanted_gender != gender_from_pid(species, PiD))
+		} while ((wanted_gender !=0xff && wanted_gender != gender_from_pid(species, PiD))
 				|| (wanted_nature != 30 && wanted_nature != __umodsi3(PiD, 25)));
 		pid_tries--;
 	} while (pid_tries >= 0 && !is_poke_shiny(TiD, PiD));

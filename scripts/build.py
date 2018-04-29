@@ -76,7 +76,8 @@ for candidatePath in Paths:
         break
 if PATH == "":
 	print('DevKit does not exist in your Path variable.\nChecking default location.')
-	PATH ='E:\\GAME\\GBA\\devkitARM\\bin'
+	#PATH ='E:\\GAME\\GBA\\devkitARM\\bin'
+	PATH ='D:\\ZXZ\\ZXZ\\entr\\Pokemon\\RSEFL\\Hack\\devkitARM\\bin'
 	if os.path.isdir(PATH) == False:
 		print("...\nDevkit not found.")
 		sys.exit(1)
@@ -275,6 +276,7 @@ def build_script():
 	if HallofFameFix == True:
 		globs["HallOfFame.c"] = process_c
 		globs["HallOfFame.s"] = process_assembly
+		globs["HyperTraining.c"] = process_c # HyperTraining
 	#check if at least one file is being built
 	if not globs:
 		print("No feature chosen.")
@@ -452,6 +454,8 @@ def insert_script(rom):
 	hook(rom, table["get_lowest_evo_stage"], 0x70004, 2)
 	bytereplace(rom, 0x70848, 0x7831, 2)
 	bytereplace(rom, 0x7084e, 0x1C38, 2)
+	#Hyper Training
+	hook(rom, table["calculate_stats_pokemon"], 0x68D0C, 1)
 
 	# Insert hooks
 	if MoreMoney == True:		

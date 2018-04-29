@@ -482,6 +482,7 @@ ai_switch_sth1 = 0x08062E54|1;
 ai_switch_sth2 = 0x080631BC|1;
 ai_switch_sth3 = 0x08063364|1;
 ai_is_statbuffed = 0x0806331C|1;
+poke_lvl_from_exp = 0x08069054|1;
 
 /*mega*/
 gpu_pal_obj_alloc_tag_and_apply = 0x8008744|1; 

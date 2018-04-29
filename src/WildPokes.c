@@ -185,7 +185,7 @@ u8 get_wild_poke_gender(u16 species)
     u8 gender_ratio = (*basestat_table)[species].gender_ratio;
     if (gender_ratio != 0 && gender_ratio != 0xFE && gender_ratio != 0xFF && get_ability_of_poke(party_player) == ABILITY_CUTE_CHARM && __umodsi3(rng(), 3) == 0)
     {
-        return poke_get_gender(party_player);
+        return 0xfe - poke_get_gender(party_player);
     }
     return 0; //random gender
 }
