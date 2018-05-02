@@ -26,7 +26,17 @@ void calculate_stats_pokemon(struct pokemon* poke){
 			else {
 				stats = __udivsi3(((base[i] << 1) + ivs + (evs >> 2)) * level, 100) + 10 + level;
 			}
-			set_attributes(poke, ATTR_CURRENT_HP, &stats);
+			//Calculate current HP
+			u16 curr_hp;
+			if (stats - get_attributes(poke, ATTR_TOTAL_HP, 0) > 0)
+				curr_hp = get_attributes(poke, ATTR_CURRENT_HP, 0) + stats - get_attributes(poke, ATTR_TOTAL_HP, 0);
+			else
+				curr_hp = get_attributes(poke, ATTR_CURRENT_HP, 0);
+			if (curr_hp > stats)
+				curr_hp = stats;
+			
+			set_attributes(poke, ATTR_TOTAL_HP, &stats);
+			set_attributes(poke, ATTR_CURRENT_HP, &curr_hp);
 		}
 		//Not HP
 		else {

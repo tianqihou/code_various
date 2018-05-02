@@ -76,7 +76,7 @@ bool attack_def_evo_check(struct pokemon* poke, u8 condition)
 	{32, STEADY_SNOW, 0x0c, 0x3f1, 0x00}, //Polar
 	{32, SNOWFLAKES, 0x0c, 0x3f2, 0x00}, //Tundra
 	{31, 0xcd, 0x0c, 0x3f3, 0x00}, //Continental
-	{35, 0x20, 0x0c, 0x3f4, 0x00}, //Garden
+	{31, 0x0f, 0x0c, 0x3f4, 0x00}, //Garden
 	{32, STEADY_MIST, 0x0c, 0x3f5, 0x00}, //Elegant
 	{33, 0x18, 0x0c, 0x3f6, 0x53}, //Icy Snow
 	{31, 0xBB, 0x0c, 0x3f7, 0x00}, //Modern
@@ -84,7 +84,7 @@ bool attack_def_evo_check(struct pokemon* poke, u8 condition)
 	{31, 0x4e, 0x0c, 0x3f9, 0x00}, //Archipelago
 	{31, 0x4d, 0x0c, 0x3fa, 0x00}, //HighPlains
 	{32, SANDSTORM, 0x0c, 0x3fb, 0x00}, //Sandstorm
-	{35, 0x22, 0x0c, 0x3fc, 0x00}, //River
+	{31, 0x22, 0x0c, 0x3fc, 0x00}, //River
 	{24, 0, 0x0c, 0x3fd, 0x00}, //Monsoon
 	{31, 0xc9, 0x0c, 0x3fe, 0x00}, //Savanna
 	{31, 0x50, 0x0c, 0x3ff, 0x00}, //Sun
@@ -297,14 +297,14 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
 			if (curr_mapheader.name == evo->pad0 && (time_check(17,17) || time_check(5,5)))
 				goto LEVELUP_EVO;
 			break;
-		case 35://certain area, certain tile
+		/*case 35://certain area, certain tile
 			if (curr_mapheader.name == evo->pad0){
 				u16 curr_block = cur_map_get_blockid_at(sav1->x_coords + 7, sav1->y_coords + 7);
 				if (curr_block == 0x170 || curr_block == 0x208 || curr_block == 0x210){
 					goto LEVELUP_EVO;
 				}
 			}
-			break;
+			break;*/
         }
         if (evolving)
         {

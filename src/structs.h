@@ -301,7 +301,7 @@ struct pokemon_summary{
 extern struct pokemon_summary* poke_summary;
 
 struct exp_group{
-    u32 required[101];
+    u32 required[256];
 };
 
 struct battle_flags{

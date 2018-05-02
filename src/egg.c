@@ -59,7 +59,7 @@ u32 get_shiny_pid(u32 PiD, u32 TiD, u8 wanted_nature, u8 wanted_gender, s32 pid_
 	do {
 		do {
 			PiD = rng() | (rng() << 0x10);
-		} while ((wanted_gender !=0xff && wanted_gender != gender_from_pid(species, PiD))
+		} while ((wanted_gender && wanted_gender != gender_from_pid(species, PiD))
 				|| (wanted_nature != 30 && wanted_nature != __umodsi3(PiD, 25)));
 		pid_tries--;
 	} while (pid_tries >= 0 && !is_poke_shiny(TiD, PiD));

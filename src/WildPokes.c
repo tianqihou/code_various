@@ -211,13 +211,13 @@ void create_wild_poke_new(u16 species, u8 lvl)
     u32 PiD=0;
     u32 TiD = get_full_trainerID();
     PiD=get_shiny_pid(PiD, TiD, wanted_nature, wanted_gender, pid_tries, species);
-	//����
+	/*//����
 	if (curr_mapheader.type == 3 && cur_map_get_blockid_at(sav1->x_coords + 7, sav1->y_coords + 7) == 0xD &&
 	lvl > 9&& ( __umodsi3(rng(), 100) == 1))
 	{
 		species = __umodsi3(rng(), 19) + 0x3F1;
 		lvl = 10;
-	}
+	}*/
 	//������
 	if(species == 0x2d2)
 	{

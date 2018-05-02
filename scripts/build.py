@@ -245,6 +245,7 @@ def build_script():
 	globs = {}
 	globs['egg.c'] = process_c
 	globs['egg.s'] = process_assembly
+	globs["HyperTraining.c"] = process_c # HyperTraining	
 	if MoreMoney == True:
 		globs['MoreMoney.c'] = process_c
 	if EVTrainers == True:
@@ -276,7 +277,6 @@ def build_script():
 	if HallofFameFix == True:
 		globs["HallOfFame.c"] = process_c
 		globs["HallOfFame.s"] = process_assembly
-		globs["HyperTraining.c"] = process_c # HyperTraining
 	#check if at least one file is being built
 	if not globs:
 		print("No feature chosen.")
