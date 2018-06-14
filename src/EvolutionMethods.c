@@ -75,12 +75,12 @@ bool attack_def_evo_check(struct pokemon* poke, u8 condition)
     struct evolution_sub spewpa_table[spewpa_evos] =  {
 	{32, STEADY_SNOW, 0x0c, 0x3f1, 0x00}, //Polar
 	{32, SNOWFLAKES, 0x0c, 0x3f2, 0x00}, //Tundra
-	{31, 0xcd, 0x0c, 0x3f3, 0x00}, //Continental
+	{31, 0xc6, 0x0c, 0x3f3, 0x00}, //Continental
 	{31, 0x0f, 0x0c, 0x3f4, 0x00}, //Garden
 	{32, STEADY_MIST, 0x0c, 0x3f5, 0x00}, //Elegant
 	{33, 0x18, 0x0c, 0x3f6, 0x53}, //Icy Snow
-	{31, 0xBB, 0x0c, 0x3f7, 0x00}, //Modern
-	{31, 0xcc, 0x0c, 0x3f8, 0x00}, //Marine
+	{31, 0x0c, 0x0c, 0x3f7, 0x00}, //Modern
+	{31, 0x44, 0x0c, 0x3f8, 0x00}, //Marine
 	{31, 0x4e, 0x0c, 0x3f9, 0x00}, //Archipelago
 	{31, 0x4d, 0x0c, 0x3fa, 0x00}, //HighPlains
 	{32, SANDSTORM, 0x0c, 0x3fb, 0x00}, //Sandstorm
@@ -137,7 +137,7 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
             evolving = happiness_evo_check(poke, DAY_FIRST_HOUR, DAY_LAST_HOUR);
             break;
         case 3: //happiness nighttime
-            evolving = happiness_evo_check(poke, NIGHT_FIRST_HOUR, NIGHT_FIRST_HOUR);
+            evolving = happiness_evo_check(poke, NIGHT_FIRST_HOUR, NIGHT_LAST_HOUR);
             break;
         LEVELUP_EVO:
         case 4: //level up
@@ -159,16 +159,16 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
                 evolving = 1;
             break;
         case 8: //attack greater than defense
-            evolving = attack_def_evo_check(poke, ATK_HIGHER);
-			goto LEVELUP_EVO;
+            if (attack_def_evo_check(poke, ATK_HIGHER))
+				goto LEVELUP_EVO;
             break;
         case 9: //attack equal to defense
-            evolving = attack_def_evo_check(poke, EQUAL);
-			goto LEVELUP_EVO;
+            if (attack_def_evo_check(poke, EQUAL))
+				goto LEVELUP_EVO;
             break;
         case 10: //attack lower than defense
-            evolving = attack_def_evo_check(poke, DEF_HIGHER);
-			goto LEVELUP_EVO;
+            if (attack_def_evo_check(poke, DEF_HIGHER))
+				goto LEVELUP_EVO;
             break;
         case 11: //pid <0, 4>
             if (pid_form < 5)

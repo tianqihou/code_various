@@ -2,7 +2,7 @@
 #include "defines.h"
 
 u8 get_ivs(struct pokemon* poke, u8 attr){
-	if(poke->padding_maybe >> (attr + 1) & 1)
+	if(poke->padding_maybe >> (attr + 1) & 1 && poke->level == 100)
 		return 31;
 	return get_attributes(poke, ATTR_HP_IV + attr, 0);
 }

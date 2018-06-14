@@ -597,7 +597,7 @@ def main():
 	build_script()
 	shutil.copyfile(rom_name, copy_name) #copy rom
 	rom = open(copy_name, 'rb+')
-	#clear(rom, 0xFBD200, 0xfc2c7c)
+	clear(rom, 0xFBD200, 0xfc2c7c) #发布版要取消注释
 	insert_script(rom)
 	rom.seek(0x71532)
 	rom.write(b'\x00\xF0\x00\xF8')
