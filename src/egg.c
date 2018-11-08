@@ -54,13 +54,37 @@ u16 get_lowest_evo_stage(void* poke, u8 id)
 	return get_lowest_evo_stage0(species, item);
 }
 
+bool minior_match(u32 PiD, u16 species) //return 1 when pokemon is a matching minior core or other pokemon
+{
+	u8 mod = __umodsi3(PiD, 7);
+	switch (species) {
+	case 0x3CB:
+		return (mod == 0);
+	case 0x3EB:
+		return (mod == 1);
+	case 0x3EC:
+		return (mod == 2);
+	case 0x3ED:
+		return (mod == 3);
+	case 0x3EE:
+		return (mod == 4);
+	case 0x3EF:
+		return (mod == 5);
+	case 0x3F0:
+		return (mod == 6);
+	default:
+		return 1;
+	}
+}
+
 u32 get_shiny_pid(u32 PiD, u32 TiD, u8 wanted_nature, u8 wanted_gender, s32 pid_tries, u16 species)
 {
 	do {
 		do {
 			PiD = rng() | (rng() << 0x10);
 		} while ((wanted_gender && wanted_gender != gender_from_pid(species, PiD))
-				|| (wanted_nature != 30 && wanted_nature != __umodsi3(PiD, 25)));
+				|| (wanted_nature != 30 && wanted_nature != __umodsi3(PiD, 25))
+				|| !minior_match(PiD, species));
 		pid_tries--;
 	} while (pid_tries >= 0 && !is_poke_shiny(TiD, PiD));
 	return PiD;
@@ -83,17 +107,29 @@ struct pokemon* get_mother(void* poke_parent)
 	return poke_parent;
 }
 
+u8 get_everstone_nature(void* poke, void* poke_parent)
+{
+	bool everstone1 = (get_attributes(poke_parent, ATTR_HELD_ITEM, 0) == 0xC3);
+	bool everstone2 = (get_attributes(poke_parent + 0x8C, ATTR_HELD_ITEM, 0) == 0xC3);
+	u8 nature = __umodsi3(get_attributes(poke, ATTR_PID, 0), 25);
+	if (everstone1 || everstone2) {
+		if (everstone1)
+			nature = __umodsi3(get_attributes(poke_parent, ATTR_PID, 0), 25);
+		if (everstone2 > __umodsi3(rng(), everstone1 + everstone2))
+			nature = __umodsi3(get_attributes(poke_parent + 0x8C, ATTR_PID, 0), 25);
+	}
+	return nature;
+}
+
 void do_egg_shiny(void* poke, void* poke_parent)
 {
-	if (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1)) {
-		u16 species = get_attributes(poke, ATTR_SPECIES, 0);
-		u32 PiD = get_attributes(poke, ATTR_PID, 0);
-		u32 TiD = get_full_trainerID();
-		u8 nature = __umodsi3(PiD, 25);
-		u8 gender = gender_from_pid(species, PiD);
-		PiD = get_shiny_pid(PiD, TiD, nature, gender, 2, species);
-		set_attributes(poke, ATTR_PID, &PiD);
-	}
+	u16 species = get_attributes(poke, ATTR_SPECIES, 0);
+	u32 PiD = get_attributes(poke, ATTR_PID, 0);
+	u32 TiD = get_full_trainerID();
+	u8 nature = get_everstone_nature(poke, poke_parent);
+	u8 gender = gender_from_pid(species, PiD);
+	PiD = get_shiny_pid(PiD, TiD, nature, gender, 2 * (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1)), species);
+	set_attributes(poke, ATTR_PID, &PiD);
 }
 
 bool learned_move(struct pokemon* poke, u16 move)
