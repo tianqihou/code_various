@@ -198,19 +198,19 @@ void create_wild_poke_new(u16 species, u8 lvl)
     memset(party_opponent, 0, 600);
     u8 wanted_gender = get_wild_poke_gender(species);
     u8 wanted_nature = get_wild_poke_nature();
-    s32 pid_tries = 0;
+    // s32 pid_tries = 0;
 	
-    if (CHAIN_FISHING == true && custom_flagcheck(FISHING_FLAG))
-    {
-        pid_tries += (1 + 2 * last_fishing_loc.tries);
-        if (pid_tries > 41) {pid_tries = 41;}
-    }
+    // if (CHAIN_FISHING == true && custom_flagcheck(FISHING_FLAG))
+    // {
+        // pid_tries += (1 + 2 * last_fishing_loc.tries);
+        // if (pid_tries > 41) {pid_tries = 41;}
+    // }
 	
-    if (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1))
-		pid_tries += 2;
+    // if (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1))
+		// pid_tries += 2;
     u32 PiD=0;
     u32 TiD = get_full_trainerID();
-    PiD=get_shiny_pid(PiD, TiD, wanted_nature, wanted_gender, pid_tries, species);
+    PiD=get_shiny_pid(PiD, TiD, wanted_nature, wanted_gender, 1 + 4 * (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1)), species);
 	/*//����
 	if (curr_mapheader.type == 3 && cur_map_get_blockid_at(sav1->x_coords + 7, sav1->y_coords + 7) == 0xD &&
 	lvl > 9&& ( __umodsi3(rng(), 100) == 1))

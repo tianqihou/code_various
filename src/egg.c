@@ -128,7 +128,7 @@ void do_egg_shiny(void* poke, void* poke_parent)
 	u32 TiD = get_full_trainerID();
 	u8 nature = get_everstone_nature(poke, poke_parent);
 	u8 gender = gender_from_pid(species, PiD);
-	PiD = get_shiny_pid(PiD, TiD, nature, gender, 2 * (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1)), species);
+	PiD = get_shiny_pid(PiD, TiD, nature, gender, 1 + 4 * (SHINY_CHARM != 0x0 && checkitem(SHINY_CHARM, 1)), species);
 	set_attributes(poke, ATTR_PID, &PiD);
 }
 
