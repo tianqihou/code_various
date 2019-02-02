@@ -1,5 +1,6 @@
-*.o
-*.bin
 *.gba
 *.sav
 *.sgm
+*.o
+*.bin
+*.ini
