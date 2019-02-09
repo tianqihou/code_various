@@ -229,7 +229,7 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
                 goto LEVELUP_EVO;
             break;
         case 24: //by level if it's raining (Goodra evo)
-            if (sav1->ov_weather == RAINY || sav1->ov_weather == THUNDERSTORM)
+            if (sav1->ov_weather == RAINY || sav1->ov_weather == THUNDERSTORM || sav1->ov_weather == STEADY_MIST)
                 goto LEVELUP_EVO;
             break;
         case 25: //by level if there's specific pokemon in party (Mantyke evo)
@@ -315,6 +315,7 @@ u16 try_evolving_poke(struct pokemon* poke, enum evo_index index, u16 stoneID)
                     u16 zero = 0;
                     set_attributes(poke, ATTR_HELD_ITEM, &zero);
                 }
+				poke->padding_maybe ^= 128; //Use poke->padding_maybe >> 7 to show if pokemon is evolving
                 return evo->poke;
             }
         }
