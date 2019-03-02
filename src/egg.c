@@ -153,6 +153,19 @@ void do_moves_heritance(struct pokemon* poke, struct pokemon* poke_parent)
 	}
 }
 
+void do_ability_heritance(struct pokemon* poke, struct pokemon* poke_parent)
+{
+	//Hidden Ability
+	poke->padding_maybe &= ((poke_parent->padding_maybe & 1) && __umodsi3(rng(), 100) < 60);
+	//Normal Abilities
+	if (!poke->padding_maybe)
+	{
+		u8 parent_ability = get_attributes(poke_parent, ATTR_ABILITY_BIT, 0);
+		u8 poke_ability = (__umodsi3(rng(), 100) < 80) ? parent_ability : !parent_ability;
+		set_attributes(poke, ATTR_ABILITY_BIT, &poke_ability);
+	}
+}
+
 void set_egg_poke(struct pokemon* poke)
 {
 	void* poke_parent = (void*) sav1;
@@ -173,6 +186,7 @@ void set_egg_poke(struct pokemon* poke)
 	change_ball(poke_parent, poke);
 	do_egg_shiny(poke, poke_parent);
 	do_moves_heritance(poke, poke_parent);
+	do_ability_heritance(poke, poke_parent);
 }
 
 u8* get_flag_address_new(u16 flagID)
